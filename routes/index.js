@@ -7,8 +7,8 @@ var bucketURL = "https://s3-us-west-1.amazonaws.com/krzysztof-juchnowicz/";
 var AWS_CONFIG_FILE = "config.json";
 var POLICY_FILE = "policy.json";
 var sqsHelper = require("../sqsHelper");
+var logger = require("../logger");
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
     var awsConfig = helpers.readJSONFile(AWS_CONFIG_FILE);
     var policyData = helpers.readJSONFile(POLICY_FILE);
@@ -30,7 +30,8 @@ router.get('/', function(req, res, next) {
 
     s3.listObjectsV2(params, function (err, data) {
         if(err){
-            console.log("Error: " + err);
+            logger.logMessage(err, "ERROR - list objects");
+            console.log("List objects Error: " + err);
         } else{
             var images = [];
             data.Contents.forEach(function(image) {
@@ -43,22 +44,53 @@ router.get('/', function(req, res, next) {
                 bucketURL: bucketURL
             });
         }
-
     });
-
 });
 
 router.post('/', function(req, res, next) {
     var imageIDList = req.body.imageID;
-    if(imageIDList){
-        sqsHelper.sendToSQS(imageIDList);
+    var action = req.body.actionRadios;
+    if(imageIDList && action){
+        sqsHelper.sendToSQS(imageIDList, action);
     }
-
     res.redirect("/");
 });
 
+router.get("/delete", function (req, res, next) {
+    var awsConfig = helpers.readJSONFile(AWS_CONFIG_FILE);
+    var policyData = helpers.readJSONFile(POLICY_FILE);
+    var policy = new Policy(policyData);
+    var bucketName = policy.getConditionValueByKey("bucket");
 
+    AWS.config.update({
+        accessKeyId: awsConfig.accessKeyId,
+        secretAccessKey: awsConfig.secretAccessKey,
+        "region": awsConfig.region
+    });
+    var imageID = req.param("imageID");
+    if(imageID){
+        console.log("Delete: " + imageID);
+        var params = {
+            Bucket: bucketName,
+            Key: "images/" + imageID
+        };
 
+        var s3 = new AWS.S3();
 
+        s3.deleteObject(params, function (err, data) {
+           if(err){
+               console.log("Error: " + err);
+               logger.logMessage(err, "ERROR - delete objects from S3");
+
+           } else {
+               var message = "Object " + params.Key + " deleted";
+               logger.logMessage( message, "SUCCESS - delete objects from S3");
+               console.log(message);
+           }
+        });
+    }
+    res.redirect("/");
+
+});
 
 module.exports = router;

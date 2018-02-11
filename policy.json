@@ -4,7 +4,7 @@
     { "bucket": "krzysztof-juchnowicz" },
     [ "starts-with", "$key", "images/" ],
     { "acl": "public-read" },
-    [ "content-length-range", 0, 1048576 ],
+    [ "content-length-range", 0, 2097152 ],
     {"success_action_redirect": "http://localhost:3000/"}
   ]
 }

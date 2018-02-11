@@ -36,18 +36,26 @@
                     <div class="col-xs-5">
                         <div class="form-group">
                             <label for="exampleInputFile">File input</label>
-                            <input type="file" name="file" accept="image/*" >
+                            <input type="file" onchange="ValidateSize(this)" name="file" accept="image/*" >
                             <p class="help-block">File will be send to the server </p>
                         </div>
 
 
                     </div>
                 </div>
-
+                <script type="text/javascript">
+                    function ValidateSize(file) {
+                        var FileSize = file.files[0].size / 1024 / 1024; // in MB
+                        if (FileSize > 2) {
+                            alert('File size exceeds 2 MB. Please upload smaller image.');
+                        }
+                    }
+                </script>
                 <div class="container">
                     <div class="col-xs-3">
-                        <input type="submit" class="btn  btn-primary btn-block" value="Confirm"/>
+                        <input type="submit" id="uploadFileConfirm" class="btn  btn-primary btn-block" value="Confirm" />
                     </div>
+
                 </div>
             </form>
         </div>
