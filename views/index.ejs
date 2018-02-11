@@ -3,9 +3,50 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+      <nav class="navbar navbar-default navbar-static-top">
+          <div class="container">
+              <div class="navbar-header">
+                  <a class="navbar-brand" href="#">Image processor</a>
+              </div>
+              <div id="navbar" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                      <li class="active"><a href="#">Images</a></li>
+                      <li><a href="/uploadFile">Upload Image</a></li>
+                  </ul>
+              </div><!--/.nav-collapse -->
+          </div>
+      </nav>
+          <div class="container">
+              <form action="/" method="POST" class="form-horizontal" enctype="application/json">
+                  <div class="container process-button">
+                          <input type="submit" class="btn  btn-primary btn-block" value="Process selected images" />
+                  </div>
+                  <div class="container">
+                      <div class="row">
+                          <% images.forEach(function(image){ %>
+                          <div class="card col-lg-4">
+                              <div class="card-body my-card">
+                                  <h4 class="card-title"><%=image.replace("images/", "")%></h4>
+                                  <img class="card-img-top" src="<%= bucketURL + image%>" alt="Card image">
+                                  <label class="form-check-label">
+                                      <input type="checkbox" class="form-check-input" value="<%=image.replace("images/", "")%>" name="imageID"> Process this image
+                                  </label>
+                              </div>
+                          </div>
+                          <%}); %>
+                      </div>
+                  </div>
+              </form>
+          </div>
   </body>
 </html>

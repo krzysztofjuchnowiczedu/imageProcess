@@ -1,0 +1,10 @@
+{
+  "expiration" : {"day":1},
+  "conditions": [
+    { "bucket": "krzysztof-juchnowicz" },
+    [ "starts-with", "$key", "images/" ],
+    { "acl": "public-read" },
+    [ "content-length-range", 0, 1048576 ],
+    {"success_action_redirect": "http://localhost:3000/"}
+  ]
+}
