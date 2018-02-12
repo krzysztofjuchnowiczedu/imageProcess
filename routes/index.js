@@ -10,41 +10,42 @@ var sqsHelper = require("../sqsHelper");
 var logger = require("../logger");
 
 router.get('/', function(req, res, next) {
-    var awsConfig = helpers.readJSONFile(AWS_CONFIG_FILE);
-    var policyData = helpers.readJSONFile(POLICY_FILE);
-    var policy = new Policy(policyData);
-    var bucketName = policy.getConditionValueByKey("bucket");
-
-    AWS.config.update({
-        accessKeyId: awsConfig.accessKeyId,
-        secretAccessKey: awsConfig.secretAccessKey,
-        "region": awsConfig.region
-    });
-
-    var s3 = new AWS.S3();
-
-    var params = {
-        Bucket: bucketName,
-        Prefix: "images"
-    };
-
-    s3.listObjectsV2(params, function (err, data) {
-        if(err){
-            logger.logMessage(err, "ERROR - list objects");
-            console.log("List objects Error: " + err);
-        } else{
-            var images = [];
-            data.Contents.forEach(function(image) {
-                images.push(image.Key);
-            });
-
-            res.render('index', {
-                title: 'Image upload',
-                images: images,
-                bucketURL: bucketURL
-            });
-        }
-    });
+    // var awsConfig = helpers.readJSONFile(AWS_CONFIG_FILE);
+    // var policyData = helpers.readJSONFile(POLICY_FILE);
+    // var policy = new Policy(policyData);
+    // var bucketName = policy.getConditionValueByKey("bucket");
+    //
+    // AWS.config.update({
+    //     accessKeyId: awsConfig.accessKeyId,
+    //     secretAccessKey: awsConfig.secretAccessKey,
+    //     "region": awsConfig.region
+    // });
+    //
+    // var s3 = new AWS.S3();
+    //
+    // var params = {
+    //     Bucket: bucketName,
+    //     Prefix: "images"
+    // };
+    //
+    // s3.listObjectsV2(params, function (err, data) {
+    //     if(err){
+    //         logger.logMessage(err, "ERROR - list objects");
+    //         console.log("List objects Error: " + err);
+    //     } else{
+    //         var images = [];
+    //         data.Contents.forEach(function(image) {
+    //             images.push(image.Key);
+    //         });
+    //
+    //         res.render('index', {
+    //             title: 'Image upload',
+    //             images: images,
+    //             bucketURL: bucketURL
+    //         });
+    //     }
+    // });
+    res.sendStatus(200);
 });
 
 router.post('/', function(req, res, next) {
