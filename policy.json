@@ -5,6 +5,6 @@
     [ "starts-with", "$key", "images/" ],
     { "acl": "public-read" },
     [ "content-length-range", 0, 2097152 ],
-    {"success_action_redirect": "http://localhost:3000/"}
+    {"success_action_redirect": "http://kj-balancer-2011120950.us-west-1.elb.amazonaws.com:3000/"}
   ]
 }
